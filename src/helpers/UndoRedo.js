@@ -1,5 +1,5 @@
 import Stack from './Stack';
-import { PubSub } from './PubSub';
+import { pubSub } from './PubSub';
 import {mergedPolygonCreatedHandler, mergePolygonUndoHandler, mergePolygonRedoHandler, newPolygonCreatedHandler, existingPolygonEditedHandler, undoHandler, redoHandler} from './Handlers';
 
 // Undo MAIN Stack that stores the sequence in which Polygons are added/edited.
@@ -17,8 +17,6 @@ export const redoStackObject = new Map();
 // Map which holds the Polygons to made when Undo operation is perfromed on Merged Polygon .
 export const mergedPolygonsMap = new Map();
 
-
-const pubSub = PubSub();
 pubSub.subscribe("Polygon_made_is_overlapping_with_other_polygons", mergedPolygonCreatedHandler);
 pubSub.subscribe("Polygon_to_undo_is_merged_polygon", mergePolygonUndoHandler);
 pubSub.subscribe("Polygon_to_redo_is_merged_polygon", mergePolygonRedoHandler);
@@ -33,12 +31,9 @@ from = 1 : When Undo operation is performed -> comes from UndoRedoDS.js
 from = 2 : When new Polygon is created AND it is intersecting -> comes from Merge() in Merge.js
 from = 3 : When Undo operation is performed on a Merged polygon -> comes from UndoRedo.js
 */
-export function maintainStackStates(map, addedPolygons, options, preventMutations, isIntersecting, count, pid, from) {
-
-    const data = {map, addedPolygons, options, preventMutations, isIntersecting, count, pid, from};
-
-
-    switch (from) {
+export function maintainStackStates(data) {
+    console.log(data);
+    switch (data.from) {
         case 2 : {
             console.log("CASE 2");
             pubSub.publish("Polygon_made_is_overlapping_with_other_polygons", data);
@@ -55,7 +50,7 @@ export function maintainStackStates(map, addedPolygons, options, preventMutation
             return;
         }
         default: {
-            if(pid) {
+            if(data.pid) {
                 pubSub.publish("Existing_Polygon_is_edited_and_it_is_non_overlapping", data);
             } else {
                 pubSub.publish("Simple_new_Polygon_is_created", data);

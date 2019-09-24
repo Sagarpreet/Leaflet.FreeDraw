@@ -1,4 +1,4 @@
-export const PubSub = () => {
+const PubSub = () => {
     
     const state = {};
 
@@ -23,6 +23,4 @@ export const PubSub = () => {
     };
   };
   
-//   const a = PubSub.subscribe('count', (count) => {console.log(count);});
-//   PubSub.publish('count', 5);
-//   a();
+  export const pubSub = PubSub();
