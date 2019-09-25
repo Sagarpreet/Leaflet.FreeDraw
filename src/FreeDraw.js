@@ -17,9 +17,8 @@ import { compose, head } from 'ramda';
 import * as turf from '@turf/helpers'
 import pointsWithinPolygon from '@turf/points-within-polygon'
 import { latLngsToClipperPoints } from './helpers/Simplify';
-
-
-export const history = UndoRedo();
+import { pubSub } from './helpers/PubSub';
+import { maintainStackStates } from './helpers/UndoRedo';
 
 /**
  * @constant polygons
@@ -41,7 +40,8 @@ export const defaultOptions = {
     maximumPolygons: Infinity,
     notifyAfterEditExit: false,
     leaveModeAfterCreate: false,
-    strokeWidth: 2
+    strokeWidth: 2,
+    undoRedo: true
 };
 
 /**
@@ -116,9 +116,15 @@ export default class FreeDraw extends FeatureGroup {
                                  .classed('free-draw', true).attr('width', '100%').attr('height', '100%')
                                  .style('pointer-events', 'none').style('z-index', '1001').style('position', 'relative');
 
-        // Set the mouse events.
-        history.attachListeners(map);
+       // Set the mouse events.
         this.listenForEvents(map, svg, this.options);
+
+        if(this.options.undoRedo) {
+            const history = UndoRedo();
+            // Set Undo Redo Listeners
+            history.attachListeners(map);
+            pubSub.subscribe('Add_Undo_Redo', maintainStackStates)
+        }
 
     }
 
