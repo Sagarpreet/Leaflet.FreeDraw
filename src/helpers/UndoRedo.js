@@ -23,8 +23,6 @@ pubSub.subscribe("Polygon_to_redo_is_merged_polygon", mergePolygonRedoHandler);
 pubSub.subscribe("Simple_new_Polygon_is_created", newPolygonCreatedHandler);
 pubSub.subscribe("Existing_Polygon_is_edited_and_it_is_non_overlapping", existingPolygonEditedHandler);
 
-
-
 /*
 from = 0 : When existing polygon is edited -> comes from Polyfill() in Merge.js
 from = 1 : When Undo operation is performed -> comes from UndoRedoDS.js

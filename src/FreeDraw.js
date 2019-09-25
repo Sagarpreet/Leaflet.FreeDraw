@@ -20,6 +20,7 @@ import { latLngsToClipperPoints } from './helpers/Simplify';
 import { pubSub } from './helpers/PubSub';
 import { maintainStackStates } from './helpers/UndoRedo';
 
+
 /**
  * @constant polygons
  * @type {WeakMap}
